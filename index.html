@@ -1,0 +1,327 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI-RWA Finance | Revolutionizing RWAs with AI on Solana</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="description" content="AI-RWA Finance: Tokenizing real-world assets with AI-powered DeFi on Solana. Join our pre-sale now!">
+  <meta name="keywords" content="DeFi, RWA, AI, Solana, tokenization, crypto, finance, pre-sale">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .animate-hero { animation: fadeIn 1s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .video-placeholder { position: relative; cursor: pointer; }
+    .video-placeholder .play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .video-placeholder:hover .overlay { opacity: 0.8; }
+    .logo-text {
+      font-size: 2rem; /* 32px on desktop */
+      font-weight: 700;
+      color: #FBBF24;
+      text-shadow: 1px 1px 3px #1E3A8A;
+      max-height: 60px;
+      line-height: 60px;
+    }
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #FBBF24;
+    }
+    .nav-menu {
+      display: flex;
+      space-x-6;
+    }
+    .nav-menu a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-menu a:hover {
+      color: #FBBF24;
+    }
+    @media (max-width: 768px) {
+      .logo-text {
+        font-size: 1.5rem; /* 24px on mobile */
+        max-height: 45px;
+        line-height: 45px;
+        white-space: nowrap; /* Prevents line break */
+      }
+      .menu-toggle {
+        display: block;
+      }
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #4B5563;
+        flex-direction: column;
+        padding: 1rem;
+        text-align: center;
+      }
+      .nav-menu.active {
+        display: flex;
+      }
+      .nav-menu a {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Header -->
+  <header class="bg-gray-800 py-4 sticky top-0 z-10 shadow-lg">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <span class="logo-text">AI-RWA Finance</span>
+      <div class="flex items-center">
+        <nav class="nav-menu space-x-6">
+          <a href="#home" class="hover:text-yellow-400 transition-colors">Home</a>
+          <a href="#about" class="hover:text-yellow-400 transition-colors">About</a>
+          <a href="#presale" class="hover:text-yellow-400 transition-colors">Pre-Sale</a>
+          <a href="#tokenomics" class="hover:text-yellow-400 transition-colors">Tokenomics</a>
+          <a href="#roadmap" class="hover:text-yellow-400 transition-colors">Roadmap</a>
+          <a href="#community" class="hover:text-yellow-400 transition-colors">Community</a>
+        </nav>
+        <div class="menu-toggle md:hidden">☰</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-blue-600 to-purple-600">
+    <div class="container mx-auto px-4 text-center animate-hero">
+      <h2 class="text-5xl md:text-7xl font-bold mb-6">Revolutionizing Finance with AI & RWAs</h2>
+      <p class="text-xl md:text-2xl max-w-3xl mx-auto mb-8">AI-RWA Finance: Tokenizing real-world assets with AI-powered DeFi on Solana. Invest in real estate, art, and more from just $1.</p>
+      <!-- Video Placeholder -->
+      <div class="video-placeholder max-w-3xl mx-auto mb-8 rounded-lg overflow-hidden shadow-lg">
+        <div class="bg-gray-700 h-64 md:h-96 flex items-center justify-center relative">
+          <div class="overlay bg-black opacity-50 absolute inset-0"></div>
+          <svg class="play-icon w-16 h-16 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <p class="absolute bottom-4 left-4 text-sm md:text-lg text-white">Our Vision: Tokenizing $100B in real-world assets with AI on Solana, democratizing finance for all.</p>
+        </div>
+      </div>
+      <div class="space-x-4">
+        <a href="#presale" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors">Join Pre-Sale</a>
+        <a href="/whitepaper_AI-RWA_Finance.pdf" class="bg-transparent border-2 border-yellow-400 hover:bg-yellow-400 hover:text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors">Read Whitepaper</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pre-Sale Section -->
+  <section id="presale" class="py-20 bg-gray-800">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-10">Join Our Pre-Sale</h2>
+      <p class="text-lg max-w-3xl mx-auto mb-8 text-gray-300">Get early access to RWAIA tokens at a discounted price before our public IDO. Be part of the future of AI-powered DeFi!</p>
+      <div class="bg-gray-700 p-1rem rounded-lg max-w-2xl mx-auto shadow-lg">
+        <h3 class="text-2xl font-semibold text-yellow-400 mb-4">Pre-Sale Details</h3>
+        <p class="text-gray-300 mb-4">Price: $0.05 per RWAIA (28% discount vs $0.07 IDO price)</p>
+        <p class="text-gray-300 mb-4">Minimum Investment: $500</p>
+        <p class="text-gray-300 mb-4">Vesting: 25% unlocked at mainnet launch (Q2 2026), 75% over 12 months</p>
+        <p class="text-gray-300 mb-6">Total Allocation: 100M tokens (10% of supply)</p>
+        <div class="max-w-md mx-auto">
+          <input type="email" placeholder="Enter your email to register interest" class="w-full p-3 mb-4 bg-gray-900 border border-gray-600 rounded-lg text-white" disabled>
+          <button class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg w-full transition-colors" disabled>Register for Pre-Sale (Coming Q4 2025)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-10">Why AI-RWA Finance?</h2>
+      <p class="text-lg max-w-3xl mx-auto mb-10 text-gray-300">AI-RWA Finance is a cutting-edge DeFi protocol that uses artificial intelligence to tokenize and manage real-world assets (RWAs) on Solana. With community governance and low-cost transactions, we make high-value investments accessible to everyone.</p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-xl font-semibold mb-3 text-yellow-400">AI-Powered Investing</h3>
+          <p class="text-gray-300">Our AI analyzes on-chain and off-chain data to optimize RWA portfolios with minimal risk.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-xl font-semibold mb-3 text-yellow-400">Community Governance</h3>
+          <p class="text-gray-300">RWAIA token holders vote on AI algorithm updates, ensuring transparency and fairness.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+          <h3 class="text-xl font-semibold mb-3 text-yellow-400">Built on Solana</h3>
+          <p class="text-gray-300">Fast, scalable, and low-cost transactions make DeFi accessible to millions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tokenomics Section -->
+  <section id="tokenomics" class="py-20 bg-gray-800">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-10">RWAIA Tokenomics</h2>
+      <p class="text-lg max-w-3xl mx-auto mb-10 text-gray-300">The RWAIA token is a utility SPL token on Solana with a fixed supply of 1B tokens, designed to drive participation and growth.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-2xl font-semibold mb-4 text-yellow-400">Token Distribution</h3>
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>40% (400M) - Token Sale (10% Pre-Sale, 30% IDO)</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>20% (200M) - Team & Advisors (4-year vesting)</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>20% (200M) - Liquidity & Marketing</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>10% (100M) - Community & Rewards</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>10% (100M) - Development & Ecosystem</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 class="text-2xl font-semibold mb-4 text-yellow-400">Token Utility</h3>
+          <div class="space-y-4">
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>Staking: Earn 5-10% APY from transaction fees.</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>Governance: Vote on AI updates and roadmap.</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>Premium Access: Discounts on tokenization & AI predictions.</p>
+            </div>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/></svg>
+              <p>Burn Mechanism: 1% of fees burned for deflation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roadmap Section -->
+  <section id="roadmap" class="py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-10">Our Roadmap</h2>
+      <div class="space-y-6 max-w-3xl mx-auto">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold text-yellow-400">Q3 2025</h3>
+          <p>Whitepaper release, team formation, seed funding.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold text-yellow-400">Q4 2025</h3>
+          <p>Pre-Sale launch, MVP development, Solana program audits.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold text-yellow-400">Q1 2026</h3>
+          <p>Beta launch on Solana devnet, RWA partnerships.</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold text-yellow-400">Q2 2026</h3>
+          <p>Mainnet launch, IDO public token sale ($10M+ goal).</p>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+          <h3 class="text-xl font-semibold text-yellow-400">Q3 2026+</h3>
+          <p>Expansion, mobile app, global adoption.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community Section -->
+  <section id="community" class="py-20 bg-gray-800">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-bold mb-10">Join the Future of Finance</h2>
+      <p class="text-lg max-w-3xl mx-auto mb-10 text-gray-300">Be part of the AI-RWA Finance community. Follow us on X, join our Telegram or Discord, and stay tuned for our IDO!</p>
+      <div class="flex justify-center space-x-6">
+        <a href="https://x.com/AI_RWA_Finance" target="_blank" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors">X</a>
+        <a href="https://t.me/AIRWAFinance" target="_blank" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors">Telegram</a>
+        <a href="https://discord.gg/AIRWAFinance" target="_blank" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg transition-colors">Discord</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-gray-300 mb-4">&copy; 2025 AI-RWA Finance. All rights reserved.</p>
+      <div class="space-x-4">
+        <a href="/whitepaper_AI-RWA_Finance.pdf" class="text-gray-400 hover:text-yellow-400">Whitepaper</a>
+        <a href="#presale" class="text-gray-400 hover:text-yellow-400">Pre-Sale</a>
+        <a href="#community" class="text-gray-400 hover:text-yellow-400">Community</a>
+        <a href="mailto:contact@airwafinance.com" class="text-gray-400 hover:text-yellow-400">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Smooth scroll for nav links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Toggle mobile menu
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
